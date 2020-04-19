@@ -1,0 +1,204 @@
+---
+title: "Estatísticas Descritivas - NYC Restaurants"
+subtitle: 'Insper - Instituto de Ensino e Pesquisa'
+author: "Lucas S. Macoris & Felipe G. Tomkowski"
+date: "26/02/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Sobre o documento
+
+O objetivo deste documento é de apresentar, de forma introdutória, um **formato de análise de dados complementar ao Excel**, no sentido de que os grupos que tenham interesse em aprimorar o trabalho da APS consigam aproveitar os códigos aqui utilizados para o cálculo de estatísticas descritivas e visualizações gráficas.^[Este material foi elaborado para a utilização como conteúdo complementar da disciplina de Microeconomia dos cursos de graduação  em Administração e Economia do **Insper - Instituto de Ensino e Pesquisa**. Para maiores informações, entre em contato com os responsáveis através de lucassm4@al.insper.edu.br ou felipegt1@al.insper.edu.br.]
+
+Este documento em *R Markdown* é o primeiro arquivo complementar relativo à disciplina de Microeconomia, compreendendo o conteúdo da **Atividade Prática Supervisionada (APS)**. Neste arquivo, utilizaremos os conceitos discutidos na **Aula 2 - Análise Descritiva de Dados** para analisar os dados relativos a uma pesquisa de mercado (*survey*) realizada em Nova York sobre características de restaurantes italianos.
+
+Para reproduzir as análises aqui realizadas, você precisará ter instalado em seu computador o *R* ou o *RStudio*. Os computadores da biblioteca do Insper possuem instalados os programas acima mencionados. No entanto, caso você queira fazer diretamente de seu computador, você precisará instalar ambos os programas.
+
+Você poderá fazer o *download* de forma gratuita do *R* através [deste link](https://cran.r-project.org/). Além disso, para fazer o *download* do RStudio, acesse [este link](https://rstudio.com/products/rstudio/) e clique no botão "Download RStudio Desktop". Para a realização das análises, recomendamos que seja utilizado o *RStudio*, pelo fato de ser uma interface mais amigável para a reprodução dos códigos.
+
+Para ter uma introdução básica de como utilizar o RStudio, recomendamos assistir a este pequeno vídeo clicando [neste link](https://www.youtube.com/watch?v=4j_rtffftzQ).
+
+
+## Sobre o *R e RMarkdown*
+
+Um documento em *RMarkdown* apresenta, juntamente com textos e visualizações gráficas, códigos utilizados no programa estatístico **R (ou RStudio)**. Ao contrário do Excel, que possui em sua grande parte uma interface que possibilita que análises sejam feitas simplesmente **clicando** nas opções que desejamos (como, por exemplo, calcular uma média ou criar um gráfico de linhas), *softwares* estatísticos, em geral, são orientados através de uma linguagem de programação específica. Neste sentido, precisamos saber como escrever os **comandos**, ou seja, as ordens que daremos ao *software* para que ele realize as funções desejadas. 
+
+Por mais que agora isso possa parecer uma tarefa bem mais complexa e que gera os mesmos resultados do que simplesmente analisar os dados via *Excel*, utilizar um *software* como o *R* possibilita uma flexibidade muito maior para lidar com os dados, tanto em termos de processamento (arquivos muito grandes, bases de dados muito complexas), bem como automatizar funções que não estão definidas no Excel (como, por exemplo, realizar uma análise de *clusters* - um assunto fora do escopo deste curso) e criação de gráficos com anotações e formas que sejam mais adequadas para representar a informação que gostaríamos de passar ao nosso público.
+
+Além disso, um ponto extremamente importante é que os códigos em R são reproduzíveis. Ou seja, **o mesmo código pode ser utilizado por diversos usuários para analisar bases de dados diferentes**. Neste sentido, todos os códigos apresentados durante a monitoria poderão ser adaptados às bases de dados de cada um dos grupos para a realização das análises que irão compor o desenvolvimento do trabalho.
+ 
+Para entender como isso funciona, vale a pena entender melhor como este documento é organizado. A organização de um arquivo em *R Markdown* é extremamente simples: os códigos, ou seja, os comandos utilizados para a realização de análises, sempre são escritos dentro de áreas específicas, chamadas de *"chunk boxes"*. **Tais áreas representam os quadrados de fundo cinza** no documento, evidenciando quais comandos serão avaliados pelo programa.
+
+Por exemplo, vamos utilizar a função `summary()` para analisar algumas estatísticas descritivas de uma base de dados chamada `cars`:
+
+```{r cars}
+#No R, toda vez que escrevemos com um "#" no início da linha, o programa entende que o código é um comentário. Ou seja, ele não será avaliado. Tal funcionalidade é interessante para deixar comentários nos códigos, explicando cada um dos passos que estamos fazendo.
+
+#Estatísticas descritivas da base de dados cars: vamos utilizar a função summary() dentro da base de dados cars para que o R nos retorne algumas estatísticas básicas da base de dados
+summary(cars)
+
+```
+
+Note que este código deste documento pode ser reproduzido em sua íntegra apenas utilizando **Copiar e Colar** dentro do R ou RStudio. Além disso, o quadrado branco apresenta a análise que foi requisitada pela função `summary()`. Este resultado é exatamente o mesmo que será apresentado pelo RStudio caso você execute os códigos apresentados no quadrado cinza.
+
+Da mesma forma, podemos, por exemplo, gerar gráficos para apresentar nossos resultados:
+
+
+```{r pressure}
+
+#Utilizaremos agora a função plot, que cria um gráfico com os dados presentes na base de dados
+
+plot(pressure)
+
+```
+
+Com base no que foi apresentado acima, aplicaremos os conceitos discutidos na **Aula 2 - Estatísticas Descritivas** em uma base de dados real de características de restaurantes italianos em Nova York.
+
+## Sobre a base de dados - NYC Restaurants
+
+Analisaremos um conjunto de dados presentes em Sheather (2009)^[Sheather, Simon. A modern approach to regression with R. Springer Science & Business Media, 2009.] que contém informações sobre uma série de restaurantes italianos em Manhattan que foram abertos em 2001 (alguns deles estão fechados agora).
+
+Os dados são coletados através do *Zagat Survey*, um guia de restaurantes e de entretenimento nas principais cidades norte-americanas, com destaque para a cidade de Nova York, criado e publicado a partir de 1979 por Tim e Nina Zagat. O guia tem por base uma pesquisa de opinião feita atravées de uma sondagem conduzida junto dos clientes dos restaurantes nova-iorquinos. 
+
+O sistema de classificação baseia-se numa escala de 25 pontos, cobrindo aspectos como a qualidade da comida, a decoração e ambiente do estabelecimento, o serviço e o preço. As variáveis presentes na base de dados são:
+
+* `Restaurant`: nome do restaurante.
+* `Price`: preço de uma refeição básica no restaurante (comida + bebida). 
+* `Food`: média das avaliações do restaurante no *Zagat Survey* para o quesito comida.
+* `Decor`: média das avaliações do restaurante no *Zagat Survey* para o quesito decoração.
+* `Serviço`: média das avaliações do restaurante no *Zagat Survey* para o quesito serviço.
+* `East`: variável binária, apresentando o valor `1` se o restaurante fica no lado Leste de Manhattan, e zero caso contrário.
+
+
+## Análise Descritiva dos dados
+
+A partir de agora, todo o conteúdo presente dentro das *chunk boxes* (área dentro do quadrado cinza) será relacionado à aplicação dos conceitos discutidos em aula. **Você poderá copiar e colar todo o código** presente dentro do referido espaço para reproduzir a análise por conta própria.
+
+### 1. Carregando os dados
+```{r 1}
+
+#Vamos carregar o arquivo dentro do RStudio (você precisa colocá-lo no diretório que será indicado pela função getwd() - note que o diretório apresentado logo abaixo refere-se ao meu computador. Você precisa utilizar a função getwd() para verificar o diretório no seu computador.
+
+getwd()
+
+#Colocando o arquivo NYC.csv no diretório que a função getwd() retornou a você, use a função read.csv para ler o documento e guardar numa base chamada Data:
+
+Data<-read.csv('Data.csv',header = TRUE,
+                          stringsAsFactors = FALSE,
+                          encoding = 'UTF-8',sep=';')
+
+names(Data)[1]<-'Restaurant'
+
+#Intro: apresentando as estatísticas básicas da base de dados
+summary(Data)
+
+#Intro: apresentando as 10 primeiras observações da base de dados:
+head(Data,n=10)
+
+```
+
+### 2. Média, moda e mediana das variáveis
+
+```{r 2}
+#Vamos calcular a média de cada uma das variáveis da base de dados (use $ para se referir à variável que deseja)
+
+mean(Data$Price) #Preço Médio
+mean(Data$Food) #Nota média no quesito Comida
+mean(Data$Decor) #Nota média no quesito Decoração
+mean(Data$Service) #Nota média no quesito Serviço
+mean(Data$East)  #63% dos restaurantes estão no lado Leste
+
+#Podemos fazer a mesma análise utilizando apenas uma linha de código através da função apply():
+apply(Data[,-1], 2, mean)
+
+# Pelo mesmo método, podemos obter a mediana das variáveis:
+apply(Data[,-1], 2, median)
+
+# Obtendo a moda das variáveis: o R não possui uma função pronta para a Moda. No entanto, podemos criar uma do zero:
+
+# Criando a função
+moda <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+#Agora, podemos obter a moda das variáveis aplicando a função criada :
+apply(Data[,-1], 2, moda)
+
+```
+
+
+### 3. Variância e Desvio-Padrão
+```{r 3}
+
+#Pelo mesmo método, podemos obter a variância dos dados :
+apply(Data[,-1], 2, var)
+
+#Como a variância não está na mesma escala dos dados, podemos obter o desvio padrão:
+apply(Data[,-1], 2, sd)
+
+
+```
+
+### 4. Distribuição dos dados
+
+```{r 4}
+
+#Podemos verificar a distribuição dos preços através da função hist()
+hist(Data$Price)
+
+#Também podemos personalizar o gráfico:
+hist(Data$Price,
+     main='Distribuição dos Preços de Restaurantes Italianos',
+     xlab='Preço Médio',
+     ylab='Frequência',breaks=30)
+
+#Ao invés de fazer um gráfico por variável, podemos apresentá-los todos juntos:
+
+#Cria uma imagem 2 linhas x 2 colunas para apresentar 4 gráficos ao mesmo tempo
+
+par(mfrow=c(3,2))
+
+hist(Data$Price,
+     main='Preços',
+     xlab='Preço Médio',
+     ylab='Frequência',breaks=30)
+
+abline(v=mean(Data$Price),lwd=3,lty=3,col='red')
+abline(v=median(Data$Price),lwd=3,lty=3,col='blue')
+
+hist(Data$Food,
+     main='Nota - Comida',
+     xlab='Nota Média',
+     ylab='Frequência',breaks=10)
+
+abline(v=mean(Data$Food),lwd=3,lty=3,col='red')
+abline(v=median(Data$Food),lwd=3,lty=3,col='blue')
+
+hist(Data$Decor,
+     main='Nota - Decoração',
+     xlab='Nota Média',
+     ylab='Frequência',breaks=10)
+
+abline(v=mean(Data$Decor),lwd=3,lty=3,col='red')
+abline(v=median(Data$Decor),lwd=3,lty=3,col='blue')
+
+
+hist(Data$Service,
+     main='Nota - Serviço',
+     xlab='Nota Média',
+     ylab='Frequência',breaks=10)
+
+abline(v=mean(Data$Service),lwd=3,lty=3,col='red')
+abline(v=median(Data$Service),lwd=3,lty=3,col='blue')
+
+par(xpd=NA)
+legend(x=10,y=-30,
+        legend = c("Média", "Mediana"), 
+        col=c('red','blue'), lwd=3,lty=3)
+
+```

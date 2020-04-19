@@ -1,0 +1,225 @@
+---
+title: "Visualização de Dados - NYC Restaurants"
+subtitle: 'Insper - Instituto de Ensino e Pesquisa'
+author: "Lucas S. Macoris & Felipe G. Tomkowski"
+date: "06/03/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Sobre o documento
+
+Este documento^[Este material foi elaborado para a utilização como conteúdo complementar da disciplina de Microeconomia dos cursos de graduação  em Administração e Economia do **Insper - Instituto de Ensino e Pesquisa**. Para maiores informações, entre em contato com os responsáveis através de lucassm4@al.insper.edu.br ou felipegt1@al.insper.edu.br.] em *R Markdown* é um complementar relativo à disciplina de Microeconomia, compreendendo o conteúdo da **Atividade Prática Supervisionada (APS)**. Neste arquivo, utilizaremos os conceitos discutidos na **Aula 4 - Visualização Gráfica** para analisar os dados relativos a uma pesquisa de mercado (*survey*) realizada em Nova York sobre características de restaurantes italianos.
+
+Para reproduzir as análises aqui realizadas, você precisará ter instalado em seu computador o *R* ou o *RStudio*. Os computadores da biblioteca do Insper possuem instalados os programas acima mencionados. No entanto, caso você queira fazer diretamente de seu computador, você precisará instalar ambos os programas.
+
+Você poderá fazer o *download* de forma gratuita do *R* através [deste link](https://cran.r-project.org/). Além disso, para fazer o *download* do RStudio, acesse [este link](https://rstudio.com/products/rstudio/) e clique no botão "Download RStudio Desktop". Para a realização das análises, recomendamos que seja utilizado o *RStudio*, pelo fato de ser uma interface mais amigável para a reprodução dos códigos.
+
+Para ter uma introdução básica de como utilizar o RStudio, recomendamos assistir a este pequeno vídeo clicando [neste link](https://www.youtube.com/watch?v=4j_rtffftzQ).
+
+
+## Sobre a base de dados - NYC Restaurants
+
+Analisaremos um conjunto de dados presentes em Sheather (2009)^[Sheather, Simon. A modern approach to regression with R. Springer Science & Business Media, 2009.] que contém informações sobre uma série de restaurantes italianos em Manhattan que foram abertos em 2001 (alguns deles estão fechados agora).
+
+Os dados são coletados através do *Zagat Survey*, um guia de restaurantes e de entretenimento nas principais cidades norte-americanas, com destaque para a cidade de Nova York, criado e publicado a partir de 1979 por Tim e Nina Zagat. O guia tem por base uma pesquisa de opinião feita atravées de uma sondagem conduzida junto dos clientes dos restaurantes nova-iorquinos. Adicionamos também uma variável chamada `Age`, construída articialmente, para fins didáticos.
+
+O sistema de classificação baseia-se numa escala de 25 pontos, cobrindo aspectos como a qualidade da comida, a decoração e ambiente do estabelecimento, o serviço e o preço. As variáveis presentes na base de dados são:
+
+* `Restaurant`: nome do restaurante.
+* `Price`: preço de uma refeição básica no restaurante (comida + bebida). 
+* `Food`: média das avaliações do restaurante no *Zagat Survey* para o quesito comida.
+* `Decor`: média das avaliações do restaurante no *Zagat Survey* para o quesito decoração.
+* `Service`: média das avaliações do restaurante no *Zagat Survey* para o quesito serviço.
+* `East`: variável binária, apresentando o valor `1` se o restaurante fica no lado Leste de Manhattan, e zero caso contrário.
+* `Age`: média da idade dos respondentes do restaurante no *Zagat Survey*.
+
+
+## Utilizando este material
+
+A partir de agora, todo o conteúdo presente dentro das *chunk boxes* (área dentro do quadrado cinza) será relacionado à aplicação dos conceitos discutidos em aula. **Você poderá copiar e colar todo o código** presente dentro do referido espaço para reproduzir a análise por conta própria.
+
+### 1. Carregando os dados
+```{r 1}
+
+#Vamos carregar o arquivo dentro do RStudio (você precisa colocá-lo no diretório que será indicado pela função getwd() - note que o diretório apresentado logo abaixo refere-se ao meu computador. Você precisa utilizar a função getwd() para verificar o diretório no seu computador.
+
+getwd()
+
+#Colocando o arquivo NYC.csv no diretório que a função getwd() retornou a você, use a função read.csv para ler o documento e guardar numa base chamada Data:
+
+Data<-read.csv('Restaurants.csv',header = TRUE,
+                          stringsAsFactors = FALSE,
+                          encoding = 'UTF-8',sep=';')
+
+
+names(Data)[1]<-'Obs'
+names(Data)[2]<-'Restaurant'
+
+```
+
+
+
+## Visualização gráfica e o *ggplot2*
+
+Dentro do R, temos uma série de funcionalidades pré-definidas, tal como no Excel. No entanto, a grande flexibilidade trazida pelo *R* (e também pelo *Python*) é a possibilidade de instalar **pacotes**, ou seja, novas funcionalidades para uma série de questões que queremos responder (ou responder de uma forma mais adequada).
+
+Conforme comentado no arquivo da aula anterior (**Aula 3 - Análise Bivariada**), comentamos sobre o pacote  [`ggplot2`](https://ggplot2.tidyverse.org/), criado por [Hadley Wickham](http://hadley.nz/). O `ggplot2` é um pacote de visualização de dados criado por Hadley Wickham em 2005. Tal pacote é uma implementação da **Grammar of Graphics** de Leland Wilkinson^[Leland Wilkinson. The Grammar of Graphics (Statistics and Computing). Springer] - um esquema geral para visualização de dados que divide gráficos em componentes semânticos, como escalas e camadas. O ggplot2 pode servir como um substituto para os gráficos base em R e contém vários padrões para exibição na Web e impressão de escalas comuns. Desde 2005, o ggplot2 cresceu para se tornar um dos pacotes R mais populares.
+
+O funcionamento do `ggplot2`, embora não seja trivial, leva em conta uma intuitiva ordem de ações: primeiro, criamos um gráfico vazio, relacionado a uma base de dados e variáveis específicas para os eixos $X$ e $Y$. Após isso, adicionamos as chamadas *layers* (camadas), que nada mais são do que os diferentes possíveis formatos de visualização possíveis (gráficos de dispersão, linhas, barras, coordenadas polares, mapas, entre outros). Por fim, personalizamos, de acordo com nossos interesses, os elementos do gráfico, como fontes, tamanhos, coordenadas, cores, legendas, entre outros elementos auxiliares.
+
+De acordo com o próprio site do referido pacote, se você é novo no `ggplot2`, a melhor forma de começar é com uma introdução sistemática sobre o seu funcionamento, ao invés em vez de tentar aprender lendo as páginas de documentação individuais. Atualmente, existem três bons lugares para começar:
+
+1. Os capítulos [*Data Visualisation*](https://r4ds.had.co.nz/data-visualisation.html) e [*Graphics for Comunication*](https://r4ds.had.co.nz/graphics-for-communication.html), do livro [*R for Data Science*](https://r4ds.had.co.nz/)^[R for Data Science, de Matt Grolemund e Hadley Wickham. Disponível em https://r4ds.had.co.nz/]. O R for Data Science foi projetado para fornecer uma introdução abrangente ao arrumado, e esses dois capítulos farão você se familiarizar com o essencial do ggplot2 o mais rápido possível.
+
+2. Se você deseja fazer um curso on-line, tente o curso [*Data Visualization in R With ggplot2*](https://shop.oreilly.com/product/0636920052807.do) de Kara Woo.
+
+3. Se você deseja criar gráficos comuns o mais rápido possível, recomendamos o material [*The R Graphics Cookbook*](https://amzn.to/2TU78ip), de Winston Chang. Ele fornece um conjunto de receitas para resolver problemas gráficos comuns.
+
+Se você já domina o básico e deseja saber mais, também pode ler o material [*ggplot2: Elegant Graphics for Data Analysis*](https://amzn.to/2fncG50). Tal material descreve os fundamentos teóricos do `ggplot2` e mostra como todas as peças se encaixam. Este livro ajuda a entender a teoria subjacente ao ggplot2 e ajuda a criar novos tipos de gráficos especificamente adaptados às suas necessidades. O livro não está disponível gratuitamente, mas você pode encontrar a fonte completa do livro em https://github.com/hadley/ggplot2-book.
+
+Por fim, uma dica pessoal é a realização dos cursos de visualização de dados do [Datacamp](https://www.datacamp.com/courses/topic:data_visualization), em especial, os três cursos de *Data Visualization with ggplot2*, ministrados por Rick Scavetta. São excelentes materiais para dominar todo o conteúdo utilizado pelo pacote.
+
+## Podemos ir além na visualização gráfica?
+
+Conforme comentado em aula, Todo gráfico e/ou tabela possui um objetivo:
+
+1. Enfatizar alguma relação
+2. Contrastar diferentes casos
+3. Demonstrar tendências, entre outros.
+
+No entanto, muitas vezes, embora saibamos exatamente o que os dados nos dizem, falhamos em transmitir a ideia em uma forma de mensagem clara e objetiva ao nosso usuário final. Neste sentido, é plausível elencar, com base no que é apresentado como visualização gráfica, os seguintes questionamentos:
+
+1. Como transmitir nossa mensagem  de forma clara e objetiva?
+2. Como evitar interpretações errôneas?
+3. Como criar uma visualização que o usuário consiga receber nossa mensagem com facilidade?
+
+Em suma, alguns princípios básicos de visualização gráfica devem ser respeitados. Primeiramente, todo gráfico deve ter um **objetivo**. Ou seja, precisamos saber exatamente qual é a **função** daquela gráfico (ou tabela) em auxiliar a transmitir nossa mensagem. Adicionalmente, um gráfico deve ter o **mínimo** de elementos necessários para transmitir uma mensagem. Neste sentido, devemos prezar por facilidade de interpretação, representação fidedigna dos dados, e poder de convencimento.
+
+O uso do `ggplot2` não é universal. Além do pacote básico de gráficos do **R**, ainda existe uma série de ferramentas auxiliares, como o [*lattice*](https://www.statmethods.net/advgraphs/trellis.html). No entanto, a forma de organização do `ggplot2`, fez com que este último se tornasse o pacote gráfico mais conhecido disponível para **R**.
+
+Existem inúmeras possibilidades de personalização de gráficos com o pacote que poderão auxiliá-lo a deixar sua visualização gráfica mais poderosa em termos do que vem sendo dito logo acima. Para ter novas ideias e conhecer exemplos (com os códigos disponíveis!) de como utilizar diferentes tipos de visualização gráfica,  você pode acessar uma série de exemplos através [deste link](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html).
+
+No entanto, você pode se perguntar: é possível explorar mais do que isso? Ou seja, existem outros formatos de visualização que podem ser explorados através do R (ou outras tecnologias similares)? A resposta, claramente, é **sim**. Neste documento, iremos abordar **três tecnologias** diferentes (disponíveis para R) que aumentam nosso horizonte de possibilidades em visualização gráfica: **gráficos interativos**, **mapas** e **dashboards**.
+
+### Interatividade e o uso do `plotly`
+
+Uma das tecnologias que vem ganhando bastante espaço em termos de visualização de dados ("*dataviz*") está relacionada ao uso de **gráficos interativos**. Tal tipo de visualização apresenta dados em estágios, para que você possa enfatizar a relação entre os grupos de dados, possibilitando com que o usuário final interaja com a visualização por meio de ferramentas como seleção, filtragem, cliques, entre outros.
+
+Dentre as tecnologias disponíveis relacionadas à parte de visualização interativa, destacaremos o uso do [**Plotly**](https://plot.ly/r/). O Plotly é uma biblioteca de visualização de dados para Python, Javascript e R. Ele nos auxilia a criar gráficos interativos, diminuindo a distância entre nossa mensagem e o usuário final, ao mesmo tempo em que nos possibilita apresentar uma série de informações que, em gráficos estáticos, possivelmente o deixaria extremamente "carregado" - violando nosso princípio de utilizar poucos elementos para transmitir nossa mensagem.
+
+Vamos ver, por exemplo, como podemos utilizar o Plotly para gerar interatividade em nossas visualizações. Antes de tudo, vamos carregar os pacotes necessários dentro de nossa sessão:
+
+
+```{r plotly1,message=FALSE,warning=FALSE}
+
+#Vamos verificar  e instalar, caso necessário, os pacotes que nos serão úteis:
+
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("plotly")) install.packages("plotly")
+
+#Agora, precisamos carregá-lo em nossa sessão utilizando a função library():
+
+library(ggplot2)
+library(plotly)
+
+```
+
+Primeiramente, vamos recordar que, na **Aula 3**, fizemos um gráfico que apresentava a relação entre as variáveis **Price** e **Food**:
+
+```{r ggplot1}
+
+G1<-ggplot(data=Data,aes(x=Food,y=Price))+
+  #Adicionamos aqui o parâmetro  col
+  geom_point(aes(col=factor(East)),alpha=0.5,size=3)+
+  #Adicionando uma linha de tendência
+  geom_smooth(data=Data,aes(x=Food,y=Price,group = 1),method='lm',se=FALSE,col='black',size=0.5,linetype='dashed')+
+  #Legendas
+  labs(x='Food',y='Price',
+       title='Gráfico - Food vs. Price',
+       col='East')+
+  #Tipo de tema: você pode mudar para uma série de temas (ex- theme_classic,theme_void,theme_gray,theme_bw, entre outros
+  theme_minimal()+
+  theme(legend.position = 'bottom',
+        axis.title = element_text(size=15),
+        title = element_text(size=15,face='bold'))
+
+print(G1)
+
+```
+
+Como podemos adicionar **interatividade** neste gráfico? A forma mais simples é através da função `ggplotly()`. Tal função é extremamente simples e basicamente requer que o usuário forneça um objeto gráfico criado pelo `ggplot`. Assim, a função **transforma** um gráfico **estático** em **dinâmico**, permitindo com que o usuário consiga navegar pelo gráfico, aproximar observações, filtrar as observações que deseja ver, realizar anotações, entre outros.
+
+```{r plotly2,warning=FALSE,message=FALSE}
+
+#Simplesmente fornecemos à função ggplotly() o nome objeto em que armazenamos nosso gráfico anterior:
+
+ggplotly(G1)
+
+```
+
+Note que a função `ggplotly()` torna todas as variáveis utilizadas no gráfico (no caso, *Food*, *Price* e *East*) interativas: o usuário pode filtrar, criar anotações, aproximar, dar zoom, salvar o gráfico como uma imagem, filtrar os pontos apresentados de acordo com a variável *East*, entre outras.
+
+Agora, suponha que, além das variáveis *Food*, *Price* e *East*, também seja de interesse de nosso público conhecer sobre as outras variáveis de nossa base de dados. Ou seja, quando apresentamos um restaurante em específico, nosso público quer saber sobre **todas as características** do restaurante: o preço cobrado, todas as notas, a idade média do público alvo e sua localização.
+
+Podemos utilizar a função `plot_ly` para adicionar tal tipo de interatividade em nosso gráfico através do clique do usuário: toda vez que ele se aproximar de um ponto do gráfico, este irá retornar uma caixa de informações com todas as informações que do restaurante no qual o ponto se refere:
+
+```{r plotly3,warning=FALSE,message=FALSE}
+
+#Vamos utilizar a função plot_ly para gerar interatividade em nosso gráfico:
+
+plot_ly(data=Data,x=~Food, #Variável do eixo X
+                  y=~Price, #Variável do eixo y
+                  color =~as.factor(East), #Vamos colorir os pontos de acordo com a variável East 
+                  colors = c('red','blue'),
+                  opacity=0.7,
+                  marker = list(size = 10,
+                  width = 2),
+                  hoverinfo='text',
+        # Hover text: aqui, apresentamos o que irá aparecer na caixa de informações toda vez que o usuário passar o cursos sobre o ponto referente a um restaurante em específico:
+        
+                  text = ~paste0(Restaurant,
+                                '<br>Nota - Service: ', Service,
+                                '<br>Nota - Decor: ', Decor,
+                                '<br>Localização: ', ifelse(East==1,'Leste','Oeste'),
+                                '<br>Idade média: ', Age))%>%
+  
+  layout(title = "Gráfico Interativo - Food vs. Price",
+         legend = list(orientation = 'h',
+                       title=list(text='East')))
+
+```
+
+Passando o cursor do mouse sobre cada um dos pontos do gráfico, vemos que, além de todas as funcionalidades fornecidas pelo gráfico anterior, agora conseguimos **representar todas as variáveis de nossa base de dados**, por restaurante, através de um gráfico que possui uma caixa de informações como elemento auxiliar!
+
+Por fim, suponha que, além de apresentar os valores de outras variáveis relacionadas a cada restaurante através da interatividade, também queiramos apresentar, graficamente, uma relação entre **três** variáveis: *Price*, *Service* e *Decor*. A alternativa tradicional é de fazer uma série de gráficos para enfatizar a relação. No entanto, e se optássemos por fazer um gráfico em três dimensões? Com o `plotly`, essa tarefa é relativamente simples:
+
+```{r plotly4,warning=FALSE,message=FALSE}
+
+## Vamos criar nosso gráfico 3D, deixando com que o usuário também verifique outras informações não contidas nos pontos apresentados na visualização gráfica:
+
+plot_ly(data=Data, #Nosso dataframe
+        x=~Food, #Variável 1
+        y=~Service, #Variável 2
+        z=~Price, #Variável 3
+        color =~as.factor(East), #Vamos colorir os pontos de acordo com a variável East
+        colors = c('red','blue'),
+        opacity=0.7,
+        marker = list(size = 10,
+                      width = 2),
+        hoverinfo='text',
+        # Hover text: aqui, podemos adicionar para os valores OUTRAS variáveis serem exibidos quando o usuário aproximar o cursor em cima de cada observação:
+        text = ~paste0(Restaurant,
+                       '<br>Nota - Service: ', Service,
+                       '<br>Nota - Decor: ', Decor,
+                       '<br>Localização: ', ifelse(East==1,'Leste','Oeste'),
+                       '<br>Idade média: ', Age))%>%
+  
+  layout(title = "Gráfico 3D - Food vs. Service vs. Price.",
+         legend = list(orientation = 'h',
+                       title=list(text='East')))
+
+```

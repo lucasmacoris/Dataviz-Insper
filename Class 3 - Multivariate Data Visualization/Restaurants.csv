@@ -1,0 +1,169 @@
+﻿Case;Restaurant;Price;Food;Decor;Service;East;Age
+1;Daniella Ristorante;43;22;18;20;0;26
+2;Tello's Ristorante;32;20;19;19;0;23
+3;Biricchino;34;21;13;18;0;25
+4;Bottino;41;20;20;17;0;18
+5;Da Umberto;54;24;19;21;0;42
+6;Le Madri;52;22;22;21;0;45
+7;Le Zie;34;22;16;21;0;60
+8;Pasticcio;34;20;18;21;1;23
+9;Belluno;39;22;19;22;1;18
+10;Cinque Terre;44;21;17;19;1;26
+11;Fino;45;19;17;20;1;27
+12;Marchi's;47;21;19;21;1;55
+13;Nicola Paone;52;21;19;20;1;38
+14;Notaro;35;19;17;19;1;63
+15;Rossini's;47;20;18;21;1;26
+16;Trattoria Alba;37;21;19;21;1;61
+17;Villa Berulia;45;22;18;23;1;60
+18;Il Postino;57;24;21;22;1;40
+19;Luna Blu;38;19;17;18;1;25
+20;San Giusto;51;22;20;22;1;55
+21;Grifone;54;23;20;23;1;44
+22;Nanni's;51;23;17;21;1;33
+23;Osteria Laguna;38;20;18;18;1;62
+24;Bellini;49;22;21;21;1;25
+25;Cellini;45;22;20;22;1;28
+26;Anche Vivolo;37;19;17;19;1;23
+27;Bruno Ristorante;50;22;19;22;1;50
+28;Chianti;43;20;16;18;1;59
+29;Da Antonio Ristorante;49;22;19;20;1;58
+30;Harry Cipriani;65;21;20;20;1;42
+31;La Gioconda;34;20;16;18;1;65
+32;Bice;51;21;20;18;1;50
+33;Coco Pazzo Café;49;20;19;19;1;26
+34;DeGrezia;51;23;22;23;1;34
+35;FELIDIA;62;25;22;23;1;44
+36;Fresco by Scotto;50;23;21;21;1;32
+37;Giambelli;51;21;18;20;1;51
+38;Il Menestrello;52;22;19;22;1;50
+39;Il Nido;57;24;20;23;1;44
+40;Il Valentino;49;21;20;21;1;55
+41;Luna Piena;33;19;17;18;1;21
+42;Paper Moon Milano;43;19;17;17;1;25
+43;Teodora;41;21;17;18;1;65
+44;San Pietro;58;24;21;23;1;41
+45;Bravo Gianni;56;22;17;21;1;41
+46;Canaletto;44;22;17;21;1;58
+47;Il Gatto & La Volpe;37;20;15;20;1;62
+48;Il Valletto Due Mila;56;21;17;20;1;44
+49;Scalinatella;58;24;18;21;1;41
+50;Barbaresco;44;16;16;16;1;27
+51;Da Filippo;46;20;18;20;1;25
+52;East River Cafe;40;20;20;20;1;23
+53;Fred's at Barneys NY;39;19;18;17;1;64
+54;Il Vagabondo;36;17;14;17;1;20
+55;Mediterraneo;34;18;15;16;1;18
+56;Nello;54;18;16;15;1;45
+57;Primola;51;23;17;20;1;35
+58;Gino;41;20;14;19;1;24
+59;Via Oreto;40;22;17;20;1;60
+60;Bardolino;24;18;13;18;1;60
+61;Campagnola;53;24;20;21;1;48
+62;Cucina Vivolo;31;19;16;17;1;65
+63;Grace's Trattoria;35;18;16;17;1;20
+64;Lumi;49;20;19;19;1;32
+65;Mezzaluna;38;19;15;17;1;20
+66;Sette Mezzo;48;21;16;18;1;60
+67;Vivolo;43;20;19;20;1;58
+68;Zucchero e Pomodori;29;17;14;15;1;63
+69;Baraonda;37;17;18;15;1;24
+70;Coco Pazzo;55;22;21;20;1;43
+71;Due;37;22;18;20;1;63
+72;Il Monello;55;23;20;22;1;45
+73;Lusardi's;49;24;20;22;1;55
+74;Maruzzella;33;19;14;18;1;62
+75;Nino's;52;23;20;22;1;38
+76;Parma;47;22;16;21;1;60
+77;Il Riccio;43;21;16;20;1;25
+78;Andiamo;33;18;17;18;1;20
+79;Caffe Grazie;38;18;16;19;1;63
+80;Giovanni Venticinque;48;21;18;19;1;27
+81;Girasole;50;21;18;21;1;53
+82;Paola's;46;23;19;21;1;60
+83;Rughetta;38;23;19;24;1;22
+84;Triangolo;33;20;16;19;1;60
+85;Cafe Trevi;46;23;19;23;1;27
+86;Divino Ristorante;37;19;15;19;1;20
+87;Elio's;50;23;18;20;1;33
+88;Erminia;54;25;24;24;1;44
+89;Firenze;41;21;19;21;1;60
+90;Luca;37;21;15;18;1;61
+91;Nicola's;50;22;18;21;1;52
+92;Primavera;60;24;22;23;1;44
+93;Sirabella's;36;23;16;22;1;61
+94;Sistina;54;23;19;21;1;43
+95;Spada;39;19;18;18;1;19
+96;Trattoria Rustica;35;20;16;18;1;60
+97;Carino Ristorante;30;19;13;20;1;62
+98;Quattro Gatti;41;19;17;19;1;24
+99;Tony's Di Napoli;30;19;14;17;1;19
+100;Ecco-la;25;18;15;15;1;22
+101;Joanna's;43;19;18;21;1;59
+102;Vico;45;20;15;17;1;57
+103;Rao's;57;23;16;20;1;40
+104;Basta Pasta;32;18;15;17;0;61
+105;Campagna;51;24;21;21;1;46
+106;Follonico;48;23;20;21;1;58
+107;Ribollita;36;18;16;16;1;18
+108;Bondi Ristorante;37;20;17;19;0;18
+109;Casa Mia;31;20;19;19;1;20
+110;Novita;47;23;19;21;1;25
+111;Paul & Jimmy's;40;19;16;19;1;23
+112;Sal Anthony's;37;18;16;18;1;62
+113;Enoteca i Trulli;43;23;20;21;1;27
+114;I Trulli;51;23;22;21;1;38
+115;Lamarca;19;18;9;15;1;25
+116;Supreme Macaroni Co.;28;17;14;17;0;18
+117;Veronica;22;21;6;14;0;65
+118;Arno;41;19;17;19;0;60
+119;Amarone;33;19;15;18;0;19
+120;Cara Mia;29;19;15;17;0;22
+121;Casa Di Meglio;33;19;17;18;0;61
+122;La Rivista;45;19;16;18;0;27
+123;Trattoria Dopo Teatro;38;17;16;17;0;63
+124;Barbetta;52;20;23;20;0;47
+125;Becco;38;20;17;19;0;25
+126;Coco Pazzo Teatro;47;18;18;17;0;57
+127;Orso;46;22;18;20;0;56
+128;Osteria al Doge;40;20;17;18;0;65
+129;Pietrasanta;32;20;15;19;0;20
+130;Rainbow Grill;65;19;23;18;0;43
+131;Torre di Pisa;47;19;21;17;0;26
+132;San Domenico;65;23;22;22;0;40
+133;Trionfo;45;20;17;21;0;57
+134;ViceVersa;46;22;22;20;0;28
+135;Artusi;44;20;19;20;0;57
+136;Ciao Europa;40;19;19;18;0;24
+137;Limoncello;46;19;18;20;0;60
+138;Puttanesca;32;19;15;17;0;61
+139;Rino Trattoria;23;20;14;16;0;24
+140;Sette MoMA;42;18;21;17;0;25
+141;Trattoria Del Sogno;29;21;18;19;0;61
+142;Castellano;49;21;18;20;0;34
+143;Circo Osteria del;53;22;24;21;0;43
+144;Giovanni;45;22;19;21;0;30
+145;Palio;63;22;25;22;0;45
+146;Remi;52;23;23;21;0;35
+147;Tuscan Square;40;19;20;17;0;64
+148;Vago Ristorante;45;22;21;23;0;59
+149;Bello;38;21;17;20;0;60
+150;Caffe Cielo;38;18;17;18;0;25
+151;Da Tommaso;42;21;16;20;0;64
+152;Il Tinello;57;23;19;23;0;45
+153;Nocello;39;21;19;20;0;63
+154;Tino's;43;20;18;18;0;56
+155;Mangia e Bevi;29;17;14;16;0;19
+156;Patsy's;42;20;16;19;0;26
+157;Gabriel's;50;22;19;21;0;35
+158;Pappardella;34;18;16;17;0;63
+159;Ernie's;31;16;15;16;0;62
+160;Pomodoro Rosso;31;20;17;19;0;21
+161;Scaletta;46;21;19;22;0;27
+162;La Grolla, Ristorante;42;21;15;19;0;58
+163;Sambuca, Trattoria;31;19;16;18;0;62
+164;Baci;31;17;15;16;0;25
+165;Puccini;26;20;16;17;0;63
+166;Bella Luna;31;18;16;17;0;65
+167;Méİtisse;38;22;17;21;0;63
+168;Gennaro;34;24;10;16;0;23
